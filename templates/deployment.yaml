@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "base-deployment.name" . }}
+  labels:
+    {{- include "base-deployment.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "base-deployment.podLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "base-deployment.podLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "base-deployment.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ include "base-deployment.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            {{- range .Values.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .containerPort }}
+              protocol: {{ .protocol }}
+            {{- end }}
+        #   livenessProbe:
+        #     httpGet:
+        #       path: /
+        #       port: http
+        #   readinessProbe:
+        #     httpGet:
+        #       path: /
+        #       port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
