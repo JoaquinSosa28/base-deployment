@@ -58,10 +58,10 @@ ingress:
           pathType: Prefix
           service: example-svc
           port: 80
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: chart-example-tls
+      hosts:
+        - chart-example.local
 
 resources:
   {}
