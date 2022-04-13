@@ -32,7 +32,7 @@ spec:
             {{- end }}
           env:
             - name: REDEPLOY
-            value: 'RANDOM'
+              value: 'RANDOM'
         #   livenessProbe:
         #     httpGet:
         #       path: /
